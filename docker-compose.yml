@@ -1,0 +1,17 @@
+version: '2.0'
+
+services:
+    proxy:
+        image: jwilder/nginx-proxy
+        volumes:
+            - "/var/run/docker.sock:/tmp/docker.sock:ro"
+
+    framework:
+        build: docker/php70
+        image: web-framework/php70
+        env_file: ./.env
+        volumes:
+          - ./framework:/var/www/html
+        environment:
+            VIRTUAL_HOST: framework.site.docker
+            DOMAIN_NAME: framework.site.docker

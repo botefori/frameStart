@@ -1,0 +1,15 @@
+version: '2.0'
+
+services:
+
+  proxy:
+      ports:
+        - 80:80
+        - 444:444
+  framework:
+      volumes:
+        - ~/.ssh:/var/www/.ssh
+        - ~/.composer:/var/www/.composer
+
+volumes:
+  database:
