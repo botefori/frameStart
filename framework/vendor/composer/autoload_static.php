@@ -20,7 +20,14 @@ class ComposerStaticInite3cfe4ecc41f404e7f687258c73458e7
             'Symfony\\Polyfill\\Php54\\' => 23,
             'Symfony\\Polyfill\\Mbstring\\' => 26,
             'Symfony\\Component\\Routing\\' => 26,
+            'Symfony\\Component\\HttpKernel\\' => 29,
             'Symfony\\Component\\HttpFoundation\\' => 33,
+            'Symfony\\Component\\EventDispatcher\\' => 34,
+            'Symfony\\Component\\Debug\\' => 24,
+        ),
+        'P' => 
+        array (
+            'Psr\\Log\\' => 8,
         ),
     );
 
@@ -41,10 +48,30 @@ class ComposerStaticInite3cfe4ecc41f404e7f687258c73458e7
         array (
             0 => __DIR__ . '/..' . '/symfony/routing',
         ),
+        'Symfony\\Component\\HttpKernel\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/symfony/http-kernel',
+        ),
         'Symfony\\Component\\HttpFoundation\\' => 
         array (
             0 => __DIR__ . '/..' . '/symfony/http-foundation',
         ),
+        'Symfony\\Component\\EventDispatcher\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/symfony/event-dispatcher',
+        ),
+        'Symfony\\Component\\Debug\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/symfony/debug',
+        ),
+        'Psr\\Log\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/psr/log/Psr/Log',
+        ),
+    );
+
+    public static $fallbackDirsPsr4 = array (
+        0 => __DIR__ . '/../..' . '/src',
     );
 
     public static $classMap = array (
@@ -58,6 +85,7 @@ class ComposerStaticInite3cfe4ecc41f404e7f687258c73458e7
         return \Closure::bind(function () use ($loader) {
             $loader->prefixLengthsPsr4 = ComposerStaticInite3cfe4ecc41f404e7f687258c73458e7::$prefixLengthsPsr4;
             $loader->prefixDirsPsr4 = ComposerStaticInite3cfe4ecc41f404e7f687258c73458e7::$prefixDirsPsr4;
+            $loader->fallbackDirsPsr4 = ComposerStaticInite3cfe4ecc41f404e7f687258c73458e7::$fallbackDirsPsr4;
             $loader->classMap = ComposerStaticInite3cfe4ecc41f404e7f687258c73458e7::$classMap;
 
         }, null, ClassLoader::class);

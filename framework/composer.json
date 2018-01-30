@@ -1,10 +1,17 @@
 {
   "require": {
     "symfony/http-foundation": "~2.4.9|~2.5,>=2.5.4",
-    "symfony/routing": "3.4.4"
+    "symfony/routing": "3.4.4",
+    "symfony/http-kernel": "3.2"
   },
   "require-dev": {
     "symfony/http-foundation": "~2.4.9|~2.5,>=2.5.4",
-    "symfony/routing": "3.4.4"
+    "symfony/routing": "3.4.4",
+    "symfony/http-kernel": "3.2"
+  },
+  "autoload": {
+    "psr-4": {
+      "": "src/"
+    }
   }
 }
