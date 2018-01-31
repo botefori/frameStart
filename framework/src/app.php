@@ -2,8 +2,6 @@
 
 use Symfony\Component\Routing;
 use Symfony\Component\Routing\Route;
-use Controller\LeapYearController;
-use Controller\HelloController;
 
 require_once __DIR__.'/Controller/HelloController.php';
 require_once __DIR__.'/Controller/LeapYearController.php';

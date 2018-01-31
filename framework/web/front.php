@@ -6,6 +6,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing;
 use Symfony\Component\HttpKernel\Controller\ControllerResolver;
 use Symfony\Component\HttpKernel\Controller\ArgumentResolver;
+use YaiLay\Framework;
 
 function render_template($request)
 {
@@ -26,22 +27,8 @@ $matcher = new Routing\Matcher\UrlMatcher($routes, $context);
 
 $controllerResolver= new ControllerResolver();
 $argumentsResolver= new ArgumentResolver();
-try {
 
-    $request->attributes->add($matcher->match($request->getPathInfo()));
+$framework = new Framework($matcher, $controllerResolver, $argumentsResolver);
+$response=$framework->handle($request);
 
-    $controller=$controllerResolver->getController($request);
-
-    $arguments=$argumentsResolver->getArguments($request, $controller);
-
-    $response = call_user_func_array($controller, $arguments);
-
-} catch (Routing\Exception\RouteNotFoundException $re) {
-    $response = new Response('Not Found', 404);
-}catch (InvalidArgumentException $invarg) {
-    $response = new Response($invarg->getMessage(), 500);
-}
-catch (Exception $e) {
-    $response = new Response('An error occurred ', 500);
-}
 $response->send();
