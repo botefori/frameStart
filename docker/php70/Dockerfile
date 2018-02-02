@@ -14,7 +14,16 @@ RUN apt-get install -y --no-install-recommends \
     libpng12-dev \
     libmcrypt-dev
 
+
 RUN docker-php-ext-install curl zip pdo_mysql mysqli gd bcmath mcrypt mbstring sockets
+
+# Install xDebug, if enabled
+ARG INSTALL_XDEBUG=false
+RUN if [ ${INSTALL_XDEBUG} = true ]; then \
+    # Install the xdebug extension
+    pecl install xdebug && \
+    docker-php-ext-enable xdebug \
+;fi
 
 # APCu
 RUN pecl channel-update pecl.php.net
