@@ -7,6 +7,7 @@ use Symfony\Component\Routing;
 use Symfony\Component\HttpKernel\Controller\ControllerResolver;
 use Symfony\Component\HttpKernel\Controller\ArgumentResolver;
 use YaiLay\Framework;
+use Symfony\Component\EventDispatcher\EventDispatcher;
 
 function render_template($request)
 {
@@ -16,6 +17,11 @@ function render_template($request)
 
     return new Response(ob_get_clean());
 }
+
+$dispatcher = new EventDispatcher();
+
+$dispatcher->addListener('response', array(new \YaiLay\GoogleListener(), 'onResponse'));
+$dispatcher->addListener('response', array(new \YaiLay\ContentLengthListener(), 'onResponse'), -255);
 
 
 $request = Request::createFromGlobals();
@@ -28,7 +34,7 @@ $matcher = new Routing\Matcher\UrlMatcher($routes, $context);
 $controllerResolver= new ControllerResolver();
 $argumentsResolver= new ArgumentResolver();
 
-$framework = new Framework($matcher, $controllerResolver, $argumentsResolver);
+$framework = new Framework( $dispatcher, $matcher, $controllerResolver, $argumentsResolver);
 $response=$framework->handle($request);
 
 $response->send();
