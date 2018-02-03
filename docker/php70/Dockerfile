@@ -18,12 +18,14 @@ RUN apt-get install -y --no-install-recommends \
 RUN docker-php-ext-install curl zip pdo_mysql mysqli gd bcmath mcrypt mbstring sockets
 
 # Install xDebug, if enabled
-ARG INSTALL_XDEBUG=false
-RUN if [ ${INSTALL_XDEBUG} = true ]; then \
+ARG INSTALL_XDEBUG=true
+RUN if [ ${INSTALL_XDEBUG} ]; then \
     # Install the xdebug extension
     pecl install xdebug && \
     docker-php-ext-enable xdebug \
 ;fi
+
+RUN ${INSTALL_XDEBUG} = false
 
 # APCu
 RUN pecl channel-update pecl.php.net
