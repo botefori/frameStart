@@ -8,6 +8,8 @@ use Symfony\Component\HttpKernel\Controller\ControllerResolver;
 use Symfony\Component\HttpKernel\Controller\ArgumentResolver;
 use YaiLay\Framework;
 use Symfony\Component\EventDispatcher\EventDispatcher;
+use \Symfony\Component\HttpKernel\HttpCache\HttpCache;
+use  \Symfony\Component\HttpKernel\HttpCache\Store;
 
 function render_template($request)
 {
@@ -20,8 +22,11 @@ function render_template($request)
 
 $dispatcher = new EventDispatcher();
 
-$dispatcher->addListener('response', array(new \YaiLay\GoogleListener(), 'onResponse'));
-$dispatcher->addListener('response', array(new \YaiLay\ContentLengthListener(), 'onResponse'), -255);
+$dispatcher->addSubscriber(new \YaiLay\GoogleListener());
+$dispatcher->addSubscriber(new \YaiLay\ContentLengthListener());
+
+//$dispatcher->addListener('response', array(new \YaiLay\GoogleListener(), 'onResponse'));
+//$dispatcher->addListener('response', array(new \YaiLay\ContentLengthListener()), -255);
 
 
 $request = Request::createFromGlobals();
@@ -35,6 +40,7 @@ $controllerResolver= new ControllerResolver();
 $argumentsResolver= new ArgumentResolver();
 
 $framework = new Framework( $dispatcher, $matcher, $controllerResolver, $argumentsResolver);
+$framework = new HttpCache($framework,  new Store( __DIR__.'/../cache'));
 $response=$framework->handle($request);
 
 $response->send();

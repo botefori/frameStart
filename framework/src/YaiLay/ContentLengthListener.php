@@ -4,7 +4,9 @@
 namespace YaiLay;
 
 
-class ContentLengthListener
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+
+class ContentLengthListener implements EventSubscriberInterface
 {
 
 
@@ -21,4 +23,11 @@ class ContentLengthListener
 
             }
     }
+
+    public static function getSubscribedEvents()
+    {
+       return array('response' => array('onResponse', -255));
+    }
+
+
 }

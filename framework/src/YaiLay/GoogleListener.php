@@ -4,7 +4,9 @@
 namespace YaiLay;
 
 
-class GoogleListener
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+
+class GoogleListener implements  EventSubscriberInterface
 {
 
 
@@ -19,5 +21,11 @@ class GoogleListener
 
         $response->setContent($response->getContent().'  GA code');
     }
+
+    public static function getSubscribedEvents()
+    {
+        return array('response' => 'onResponse');
+    }
+
 
 }

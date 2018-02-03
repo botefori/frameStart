@@ -10,11 +10,12 @@ use Symfony\Component\HttpKernel\Controller\ArgumentResolver;
 use Symfony\Component\HttpKernel\Controller\ArgumentResolverInterface;
 use Symfony\Component\HttpKernel\Controller\ControllerResolver;
 use Symfony\Component\HttpKernel\Controller\ControllerResolverInterface;
+use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\Routing\Exception\RouteNotFoundException;
 use Symfony\Component\Routing\Matcher\UrlMatcher;
 use Symfony\Component\Routing\Matcher\UrlMatcherInterface;
 
-class Framework
+class Framework implements HttpKernelInterface
 {
     /** @var EventDispatcher $dispatcher */
     private $dispatcher;
@@ -33,7 +34,7 @@ class Framework
         $this->argumentsResolver=$argumentsResolver;
     }
 
-    public function handle(Request $request)
+    public function handle(Request $request, $type=HttpKernelInterface::MASTER_REQUEST, $catch=true)
     {
         $this->matcher->getContext()->fromRequest($request);
 
