@@ -10,6 +10,7 @@ use YaiLay\Framework;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use \Symfony\Component\HttpKernel\HttpCache\HttpCache;
 use  \Symfony\Component\HttpKernel\HttpCache\Store;
+use \Symfony\Component\HttpKernel\HttpCache\Esi;
 
 function render_template($request)
 {
@@ -40,7 +41,7 @@ $controllerResolver= new ControllerResolver();
 $argumentsResolver= new ArgumentResolver();
 
 $framework = new Framework( $dispatcher, $matcher, $controllerResolver, $argumentsResolver);
-$framework = new HttpCache($framework,  new Store( __DIR__.'/../cache'));
+$framework = new HttpCache($framework,  new Store( __DIR__.'/../cache'), new Esi(), array('debug', true));
 $response=$framework->handle($request);
 
 $response->send();
