@@ -8,9 +8,8 @@ use Symfony\Component\HttpKernel\Controller\ControllerResolver;
 use Symfony\Component\HttpKernel\Controller\ArgumentResolver;
 use YaiLay\Framework;
 use Symfony\Component\EventDispatcher\EventDispatcher;
-use \Symfony\Component\HttpKernel\HttpCache\HttpCache;
-use  \Symfony\Component\HttpKernel\HttpCache\Store;
-use \Symfony\Component\HttpKernel\HttpCache\Esi;
+use \Symfony\Component\HttpFoundation\RequestStack;
+use \Symfony\Component\HttpKernel\EventListener\RouterListener;
 
 function render_template($request)
 {
@@ -21,27 +20,22 @@ function render_template($request)
     return new Response(ob_get_clean());
 }
 
-$dispatcher = new EventDispatcher();
-
-$dispatcher->addSubscriber(new \YaiLay\GoogleListener());
-$dispatcher->addSubscriber(new \YaiLay\ContentLengthListener());
-
-//$dispatcher->addListener('response', array(new \YaiLay\GoogleListener(), 'onResponse'));
-//$dispatcher->addListener('response', array(new \YaiLay\ContentLengthListener()), -255);
-
 
 $request = Request::createFromGlobals();
+$requestStack = new RequestStack();
 $routes = include __DIR__.'/../src/app.php';
 
 $context = new Routing\RequestContext();
 $context->fromRequest($request);
 $matcher = new Routing\Matcher\UrlMatcher($routes, $context);
 
+$dispatcher = new EventDispatcher();
+$dispatcher->addSubscriber(new RouterListener($matcher, $requestStack));
+
 $controllerResolver= new ControllerResolver();
 $argumentsResolver= new ArgumentResolver();
 
-$framework = new Framework( $dispatcher, $matcher, $controllerResolver, $argumentsResolver);
-$framework = new HttpCache($framework,  new Store( __DIR__.'/../cache'), new Esi(), array('debug', true));
+$framework = new Framework($dispatcher, $controllerResolver, $requestStack, $argumentsResolver);
 $response=$framework->handle($request);
 
 $response->send();
