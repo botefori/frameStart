@@ -10,13 +10,13 @@ class LeapYearController
     public function IndexAction(Request $request)
     {
         if(is_leap_year($request->attributes->get('year'))){
-            $response = new Response('Yep, this year is a leap!  '.rand());
+            $response = 'Yep, this year is a leap!  ';
         }
 
 
-        $response = new Response('Nope, this is not a leap year.  '.rand());
+        $response = 'Nope, this is not a leap year';
 
-        $response->setTtl(10);
+
 
         return $response;
     }

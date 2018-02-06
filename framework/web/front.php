@@ -10,6 +10,10 @@ use YaiLay\Framework;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use \Symfony\Component\HttpFoundation\RequestStack;
 use \Symfony\Component\HttpKernel\EventListener\RouterListener;
+use \Symfony\Component\Debug\Exception\FlattenException;
+use \Symfony\Component\HttpKernel\EventListener\ExceptionListener;
+use \Symfony\Component\HttpKernel\EventListener\ResponseListener;
+use \Symfony\Component\HttpKernel\EventListener\StreamedResponseListener;
 
 function render_template($request)
 {
@@ -19,6 +23,13 @@ function render_template($request)
 
     return new Response(ob_get_clean());
 }
+
+$errorHandler = function(FlattenException $exception){
+
+    $message = 'Something went wrong'.$exception->getMessage();
+
+    return new Response($message, $exception->getStatusCode());
+};
 
 
 $request = Request::createFromGlobals();
@@ -31,6 +42,9 @@ $matcher = new Routing\Matcher\UrlMatcher($routes, $context);
 
 $dispatcher = new EventDispatcher();
 $dispatcher->addSubscriber(new RouterListener($matcher, $requestStack));
+$dispatcher -> addSubscriber(new ExceptionListener($errorHandler));
+$dispatcher -> addSubscriber(new ResponseListener('UTF-8'));
+$dispatcher -> addSubscriber(new \YaiLay\StringResponseListener());
 
 $controllerResolver= new ControllerResolver();
 $argumentsResolver= new ArgumentResolver();
