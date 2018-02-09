@@ -4,7 +4,6 @@
 namespace Controller;
 
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
 
 class ByeController
 {

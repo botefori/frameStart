@@ -3,17 +3,9 @@ require_once __DIR__.'/../vendor/autoload.php';
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing;
-use Symfony\Component\HttpKernel\Controller\ControllerResolver;
-use Symfony\Component\HttpKernel\Controller\ArgumentResolver;
-use YaiLay\Framework;
-use Symfony\Component\EventDispatcher\EventDispatcher;
-use \Symfony\Component\HttpFoundation\RequestStack;
-use \Symfony\Component\HttpKernel\EventListener\RouterListener;
-use \Symfony\Component\Debug\Exception\FlattenException;
-use \Symfony\Component\HttpKernel\EventListener\ExceptionListener;
-use \Symfony\Component\HttpKernel\EventListener\ResponseListener;
-use \Symfony\Component\HttpKernel\EventListener\StreamedResponseListener;
+use YaiLay\StringResponseListener;
+use \Symfony\Component\DependencyInjection\ContainerBuilder;
+use \Symfony\Component\DependencyInjection\Reference;
 
 function render_template($request)
 {
@@ -24,32 +16,25 @@ function render_template($request)
     return new Response(ob_get_clean());
 }
 
-$errorHandler = function(FlattenException $exception){
 
-    $message = 'Something went wrong'.$exception->getMessage();
-
-    return new Response($message, $exception->getStatusCode());
-};
 
 
 $request = Request::createFromGlobals();
-$requestStack = new RequestStack();
-$routes = include __DIR__.'/../src/app.php';
 
-$context = new Routing\RequestContext();
-$context->fromRequest($request);
-$matcher = new Routing\Matcher\UrlMatcher($routes, $context);
+/** @var ContainerBuilder $yc */
+$yc = include __DIR__.'/../src/container.php';
 
-$dispatcher = new EventDispatcher();
-$dispatcher->addSubscriber(new RouterListener($matcher, $requestStack));
-$dispatcher -> addSubscriber(new ExceptionListener($errorHandler));
-$dispatcher -> addSubscriber(new ResponseListener('UTF-8'));
-$dispatcher -> addSubscriber(new \YaiLay\StringResponseListener());
+$yc -> setParameter('routes', include __DIR__.'/../src/app.php');
+$yc -> setParameter('charset', 'UTF-8');
 
-$controllerResolver= new ControllerResolver();
-$argumentsResolver= new ArgumentResolver();
+$yc -> register('listener.string_listener', StringResponseListener::class);
+$yc -> getDefinition('dispatcher')
+    -> addMethodCall('addSubscriber', array( new Reference('listener.string_listener')));
 
-$framework = new Framework($dispatcher, $controllerResolver, $requestStack, $argumentsResolver);
-$response=$framework->handle($request);
 
-$response->send();
+$response = $yc -> get('framework') -> handle($request);
+
+$response -> send();
+
+
+

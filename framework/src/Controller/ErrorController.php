@@ -12,6 +12,9 @@ class ErrorController
   {
       $msg = 'Something went wrong ! ( '.$exception -> getMessage().' )';
 
-      return new Response($msg, $exception -> getStatusCode());
+
+      $response =(new Response($msg, $exception -> getStatusCode()));
+      $response->headers->set('content-Type', 'text/plain');
+      return $response;
   }
 }

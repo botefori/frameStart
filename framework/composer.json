@@ -4,13 +4,15 @@
     "symfony/routing": "3.4.4",
     "symfony/http-kernel": "3.2",
     "phpunit/phpunit": "6.5",
-    "symfony/event-dispatcher": "^3.4"
+    "symfony/event-dispatcher": "^3.4",
+    "symfony/dependency-injection": "^3.4"
   },
   "require-dev": {
     "symfony/http-foundation": "~2.4.9|~2.5,>=2.5.4",
     "symfony/routing": "3.4.4",
     "symfony/http-kernel": "3.2",
-    "symfony/event-dispatcher": "^3.4"
+    "symfony/event-dispatcher": "^3.4",
+    "symfony/dependency-injection": "^3.4"
   },
   "autoload": {
     "psr-4": {
